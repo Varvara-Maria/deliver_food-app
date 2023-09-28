@@ -1,43 +1,41 @@
 import React from "react";
 import { ListGroupItem } from "reactstrap";
 
-import "../../../styles/cart-item.css";
-
 import { useDispatch } from "react-redux";
 import { cartActions } from "../../../store/shopping-cart/cartSlice";
 
 const CartItem = ({ item }) => {
-  const { id, title, price, image01, quantity, totalPrice } = item;
+  const { idCategory , strCategory , price = Math.floor(Math.random() * 1000), strCategoryThumb , quantity, totalPrice } = item;
 
   const dispatch = useDispatch();
 
   const incrementItem = () => {
     dispatch(
         cartActions.addItem({
-          id,
-          title,
+          idCategory,
+          strCategory,
           price,
-          image01,
+          strCategoryThumb,
         })
     );
   };
 
   const decreaseItem = () => {
-    dispatch(cartActions.removeItem(id));
+    dispatch(cartActions.removeItem(idCategory));
   };
 
   const deleteItem = () => {
-    dispatch(cartActions.deleteItem(id));
+    dispatch(cartActions.deleteItem(idCategory));
   };
 
   return (
       <ListGroupItem className="border-0 cart__item">
-        <div className="cart__item-info d-flex gap-2">
-          <img src={image01} alt="product-img" />
+        <div className="cart__item-info d-flex gap-2 mb-4">
+          <img src={strCategoryThumb} alt="product-img" width='30%' />
 
           <div className="cart__product-info w-100 d-flex align-items-center gap-4 justify-content-between">
             <div>
-              <h6 className="cart__product-title">{title}</h6>
+              <h6 className="cart__product-title">{strCategory}</h6>
               <p className=" d-flex align-items-center gap-5 cart__product-price">
                 {quantity}x <span>${totalPrice}</span>
               </p>

@@ -3,7 +3,6 @@ import React from "react";
 import { ListGroup } from "reactstrap";
 import { Link } from "react-router-dom";
 import CartItem from "./CartItem";
-
 import { useDispatch, useSelector } from "react-redux";
 import { cartUiActions } from "../../../store/shopping-cart/cartUiSlice";
 

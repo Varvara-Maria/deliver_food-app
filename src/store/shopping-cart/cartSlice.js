@@ -36,7 +36,7 @@ const cartSlice = createSlice({
     addItem(state, action) {
       const newItem = action.payload;
       const existingItem = state.cartItems.find(
-          (item) => item.id === newItem.id
+          (item) => item.idCategory === newItem.idCategory
       );
       state.totalQuantity++;
 
@@ -44,9 +44,9 @@ const cartSlice = createSlice({
         // ===== note: if you use just redux you should not mute state array instead of clone the state array, but if you use redux toolkit that will not a problem because redux toolkit clone the array behind the scene
 
         state.cartItems.push({
-          id: newItem.id,
-          title: newItem.title,
-          image01: newItem.image01,
+          idCategory: newItem.idCategory,
+          strCategory: newItem.strCategory,
+          strCategoryThumb: newItem.strCategoryThumb,
           price: newItem.price,
           quantity: 1,
           totalPrice: newItem.price,
@@ -73,12 +73,12 @@ const cartSlice = createSlice({
     // ========= remove item ========
 
     removeItem(state, action) {
-      const id = action.payload;
-      const existingItem = state.cartItems.find((item) => item.id === id);
+      const idCategory = action.payload;
+      const existingItem = state.cartItems.find((item) => item.idCategory === idCategory);
       state.totalQuantity--;
 
       if (existingItem.quantity === 1) {
-        state.cartItems = state.cartItems.filter((item) => item.id !== id);
+        state.cartItems = state.cartItems.filter((item) => item.idCategory !== idCategory);
       } else {
         existingItem.quantity--;
         existingItem.totalPrice =
@@ -97,14 +97,27 @@ const cartSlice = createSlice({
       );
     },
 
+    //============ delete items from cart ===========
+
+    deleteItems(state, action) {
+        state.cartItems = []
+        state.totalAmount = 0
+        state.totalQuantity = 0
+      setItemFunc(
+          state.cartItems.map((item) => item),
+          state.totalAmount,
+          state.totalQuantity
+      );
+    },
+
     //============ delete item ===========
 
     deleteItem(state, action) {
-      const id = action.payload;
-      const existingItem = state.cartItems.find((item) => item.id === id);
+      const idCategory = action.payload;
+      const existingItem = state.cartItems.find((item) => item.idCategory === idCategory);
 
       if (existingItem) {
-        state.cartItems = state.cartItems.filter((item) => item.id !== id);
+        state.cartItems = state.cartItems.filter((item) => item.idCategory !== idCategory);
         state.totalQuantity = state.totalQuantity - existingItem.quantity;
       }
 

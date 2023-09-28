@@ -4,8 +4,9 @@ import { Container, Row, Col } from "reactstrap";
 import CommonSection from "../components/UI/common-section/CommonSection";
 import Helmet from "../components/Helmet/Helmet";
 import emailjs from '@emailjs/browser'
-
+import { cartActions } from '../store/shopping-cart/cartSlice'
 import "../styles/checkout.css";
+import { useDispatch } from "react-redux";
 
 const Checkout = () => {
   const [enterName, setEnterName] = useState("");
@@ -14,29 +15,29 @@ const Checkout = () => {
   const [enterCountry, setEnterCountry] = useState("");
   const [enterCity, setEnterCity] = useState("");
   const [postalCode, setPostalCode] = useState("");
+  console.log(enterName, enterEmail, enterNumber, enterCountry, enterCity, postalCode)
 
-  // const shippingInfo = [];
   const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
-  const shippingCost = 30;
-
-  const totalAmount = cartTotalAmount + Number(shippingCost);
+  const totalAmount = cartTotalAmount;
+  const dispatch = useDispatch();
 
   const submitHandler = (e) => {
     e.preventDefault();
-    // const userShippingAddress = {
-    //   name: enterName,
-    //   email: enterEmail,
-    //   phone: enterNumber,
-    //   country: enterCountry,
-    //   city: enterCity,
-    //   postalCode: postalCode,
-    // };
 
-    // shippingInfo.push(userShippingAddress);
-    // console.log(shippingInfo);
-
-    emailjs.sendForm('service_osloz16', 'template_3cbixpr', e.target, 'PhgvgsCyJAJxrTpJK')
+    if(totalAmount == 0) {
+      alert('You must to add something to a cart')
+    } else if (totalAmount) {
+      emailjs.sendForm('service_osloz16', 'template_3cbixpr', e.target, 'PhgvgsCyJAJxrTpJK')
+      alert('Your order is successfully arrived');
+      setTimeout(() => {
+        dispatch(cartActions.deleteItems())
+      }, 500)
+    }
   };
+
+  const clearCart = () => {
+
+  }
 
   return (
       <Helmet title="Checkout">
@@ -112,7 +113,7 @@ const Checkout = () => {
                         onChange={totalAmount}
                     />
                   </div>
-                  <button type="submit" className="addTOCart__btn">
+                  <button onClick={clearCart} type="submit" className="addTOCart__btn">
                     Payment
                   </button>
                 </form>
@@ -122,9 +123,6 @@ const Checkout = () => {
                 <div className="checkout__bill">
                   <h6 className="d-flex align-items-center justify-content-between mb-3">
                     Subtotal: <span>${cartTotalAmount}</span>
-                  </h6>
-                  <h6 className="d-flex align-items-center justify-content-between mb-3">
-                    Shipping: <span>${shippingCost}</span>
                   </h6>
                   <div className="checkout__total">
                     <h5 className="d-flex align-items-center justify-content-between">
